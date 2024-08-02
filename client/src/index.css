@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.focus-label {
+  color: #3b82f6;
+  transform: translate(-7px, -20px) scale(0.75);
+  background-color: white;
+}
+
+.auth-input:focus ~ .auth-label,
+.auth-input:not(:placeholder-shown) ~ .auth-label {
+  @apply focus-label;
+}
+.auth-input:focus {
+  @apply border-blue-500 border-2;
+}
+
+.auth-input:not(:focus):not(:placeholder-shown) {
+  @apply border-blue-400 border;
+}
+
+.auth-input:not(:focus):not(:placeholder-shown) ~ .auth-label {
+  @apply text-blue-400;
+}
+@media (min-width: 768px) {
+  .auth-input:focus ~ .auth-label,
+  .auth-input:not(:placeholder-shown) ~ .auth-label {
+    transform: translate(-6px, -24px) scale(0.85);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
