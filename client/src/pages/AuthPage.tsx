@@ -3,9 +3,15 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { AuthInput } from "../components/AuthInput";
 import { AuthFormValues } from "../types/types";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
+
+import "react-toastify/dist/ReactToastify.css";
 
 const AuthPage: React.FC = () => {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const [formValues, setFormValues] = useState<AuthFormValues>({
     name: "",
@@ -22,18 +28,53 @@ const AuthPage: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async  (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
+
+    if (isSignUp && formValues.password !== formValues.confirmPassword) {
+      toast.error("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+    const endpoint = isSignUp ? "/auth/signup" : "/auth/login";
+    const url = `http://localhost:5001/api${endpoint}`;
 
     try {
-      
-      console.log(formValues); 
-    } catch (error) {
-      console.error(error);
-      alert("An error occurred. Please try again.");
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formValues),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "An error occurred. Please try again."
+        );
+      }
+
+      const data = await response.json();
+      console.log(data);
+      toast.success(data.message);
+      navigate('/');
+    } catch (error: any) {
+      console.error(error.message);
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
-  
   };
+
+  let buttonText = "";
+  if (isLoading) {
+    buttonText = isSignUp ? "Signing up..." : "Logging in...";
+  } else {
+    buttonText = isSignUp ? "Sign Up" : "Login";
+  }
 
   return (
     <div className="bg-gradient-to-r from-indigo-50 to-blue-50 w-screen pb-10 md:pb-0 md:h-screen flex flex-col justify-center items-center md:flex md:flex-row md:gap-x-24">
@@ -88,7 +129,7 @@ const AuthPage: React.FC = () => {
         {isSignUp && (
           <AuthInput
             type="password"
-            id="confirm-password"
+            id="confirmPassword"
             label="Confirm Password"
             value={formValues.confirmPassword}
             onChange={handleChange}
@@ -118,8 +159,9 @@ const AuthPage: React.FC = () => {
         <button
           type="submit"
           className="bg-blue-600 text-white font-bold text-sm md:text-lg h-10 md:h-12 rounded-lg hover:bg-blue-700"
+          disabled={isLoading}
         >
-          {isSignUp ? "Sign Up" : "Login"}
+          {buttonText}{" "}
         </button>
 
         <div className="flex items-center justify-center space-x-3">
@@ -151,6 +193,7 @@ const AuthPage: React.FC = () => {
           </p>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };

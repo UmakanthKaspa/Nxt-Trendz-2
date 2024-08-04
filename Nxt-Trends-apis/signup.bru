@@ -6,6 +6,11 @@ meta {
 
 post {
   url: http://localhost:5001/api/auth/signup
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {name: 'Umakanth Kaspa', email: 'kaspaumakanth99@gmail.com', password: '123456', confirmPassword: '123456'}
+  
 }

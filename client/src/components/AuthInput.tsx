@@ -11,7 +11,7 @@ export const AuthInput: React.FC<AuthInputProps> = ({ type, id, label,value,
       <input
         type={type === "password" && isPasswordVisible ? "text" : type}
         id={id}
-        
+        required
         value={value}
         onChange={onChange}
         placeholder=""
