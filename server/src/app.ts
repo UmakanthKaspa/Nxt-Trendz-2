@@ -1,8 +1,12 @@
 import express from "express";
+import authRoutes from './routes/auth';
+import cors from 'cors';
 
 const app = express();
 
-// Middleware to parse JSON request bodies
 app.use(express.json());
+app.use(cors());
+
+app.use('/api/auth', authRoutes);
 
 export default app;

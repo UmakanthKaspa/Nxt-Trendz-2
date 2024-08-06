@@ -1,9 +1,14 @@
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AuthPage from "./pages/AuthPage";
+import HomePage from "./pages/HomePage";
+const App: React.FC = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/auth" element={<AuthPage />} />
+      <Route path="/" element={<HomePage />} />
+    </Routes>
+  </BrowserRouter>
+);
 
-function App() {
-
-  return (
-    <h1 className="text-3xl font-bold underline flex justify-center items-center h-screen">Nxt-Trends</h1>
-  )
-}
-
-export default App
+export default App;

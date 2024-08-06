@@ -1,6 +1,7 @@
+import { Document } from "mongoose";
 
-export  interface IConfig {
-    PORT: number;
-    MONGODB_URL: string;
-    SECRET_KEY: string;
-  }
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  password: string;
+}

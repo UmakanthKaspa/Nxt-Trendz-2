@@ -1,26 +1,19 @@
 import dotenv from "dotenv";
-import { IConfig } from "../types/types";
+import mongoose from "mongoose";
 
 dotenv.config();
 
 const connectDB = async () => {
+  const mongoUrl = process.env.MONGODB_URL;
+
+  if (!mongoUrl) {
+    console.error("Missing required environment variable: MONGODB_URL");
+    process.exit(1);
+  }
   try {
-    const config: IConfig = {
-      PORT: process.env.PORT ? Number(process.env.PORT) : 5001,
-      MONGODB_URL: process.env.MONGODB_URL ?? "",
-      SECRET_KEY: process.env.SECRET_KEY ?? "",
-    };
-
-    const missingVars = [];
-    if (!config.MONGODB_URL) missingVars.push("MONGODB_URL");
-    if (!config.SECRET_KEY) missingVars.push("SECRET_KEY");
-    if (missingVars.length > 0) {
-      throw new Error(
-        `Missing required environment variables: ${missingVars.join(", ")}`
-      );
-    }
-
-    console.log("Configuration:", config);
+    // Connect to MongoDB
+    await mongoose.connect(mongoUrl);
+    console.log("Connected to MongoDB");
   } catch (error) {
     console.error("MongoDB connection error:", error);
     process.exit(1);
