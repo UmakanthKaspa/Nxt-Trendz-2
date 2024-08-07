@@ -1,9 +1,9 @@
 import React from 'react';
-
+import { NavBar } from '../components/NavBar';
 const HomePage: React.FC =() =>{
   return (
-    <div>
-      Home
+    <div className="bg-gradient-to-r from-indigo-50 to-blue-50 w-screen h-screen">
+      <NavBar/>
     </div>
   );
 }
